@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container emp-profile">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    {% if user.profile_pic_path %}
+                    <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt=""/>
+                    {%else%}
+
+                    <p>No profile picture</p>
+
+                    {% endif %}
+
+                    {% if user == current_user %}
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <form action="{{url_for('main.update_pic',uname=user.username)}}" method="post"
+                            enctype="multipart/form-data">
+
+                        <input type="file" name="photo" class="form-control" required>
+                        <input type="submit" class="btn btn-default btn-sm">
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                            <h5>
+                                {{username|capitalize}}
+                            </h5>
+                            {% if user.bio %}
+                            <p>
+                                {{user.bio}}
+                            </p>
+                            {% else %}
+                            <p class="proile-rating">SORRY! <span>Bio comming soon.</span></p>
+                            {% endif %}
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <a href="{{url_for('main.update_profile', uname=user.username)}}" class="btn btn-primary" name="btnAddMore">Edit Profile</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if pitches %}
+                                <h3 style="text-transform: uppercase">My Pitches</h3>
+                                    <hr>
+                                    {% for pitch in pitches %}
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">{{pitch.category}}</div>
+                                        <div class="panel-body">
+                                            <i>{{pitch.pitch_title|safe}}</i>
+                                            <p></p>{{pitch.pitch_body|safe}}<p></p>{{pitch.posted}}
+                                        </div>
+                                        <div class="panel-footer">
+                                            <a href="{{url_for('main.delete_pitch', id=pitch.id)}}" class="btn btn-danger">
+                                                Delete 
+                                            </a>
+                                        </div>
+                                    </div>
+                        
+                                    {% endfor %}
+                                    {% else %}
+                                    <h1>You have no pitches!</h1>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>           
+</div>
